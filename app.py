@@ -17,7 +17,7 @@ image_layout = [
 settings_layout = [
     [sg.Text("Settings")],
     [TextLabel("Select an image"), sg.Input(key = "-filepath-"), sg.FileBrowse(file_types=(("*.png", "*.jpg"),))],
-    [TextLabel("Nr of bricks along the longer"), sg.Input(32, key ="-bricks-")],
+    [TextLabel("Nr of bricks along the longer side"), sg.Input(32, key ="-bricks-")],
     [TextLabel("Select lego brick type"),
      sg.Radio('Plate', "R1", key="-R1-", default=True), sg.Radio('Round', "R1", key="-R2-"),
      sg.Radio('Tile', "R1", key="-R3-"), sg.Radio('Round tile', "R1", key="-R4-")],
