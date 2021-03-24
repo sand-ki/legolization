@@ -13,11 +13,11 @@ class Legolize:
 
     def brick_style(self):
         if self.brick_type == "plate":
-            self.brick_img = Image.open("assets/brick-01.png")
+            self.brick_img = Image.open("assets/lego_plate.png")
         elif self.brick_type == "round":
             self.brick_img = Image.open("assets/lego_stud.png")
         elif self.brick_type == "tile":
-            self.brick_img = Image.open("assets/brick flat-01.png")
+            self.brick_img = Image.open("assets/lego_flat_tile.png")
         elif self.brick_type == "round tile":
             self.brick_img = Image.open("assets/lego_stud_flat.png")
         else:
