@@ -155,7 +155,6 @@ while True:
                     sg.popup('Select an image before legolizing!')
             else:
                 sg.popup('Number of bricks should be integer, pls change it')
-
             window["-image-"].update(data=memory_img_to_io(lg.lego_image))
             window['-status-'].update("Legolization has been finished!")
         except Exception as e:

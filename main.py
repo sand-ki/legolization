@@ -24,16 +24,16 @@ class Legolize:
         else:
             raise AttributeError("Non-valid brick type. You can choose plate, round, tile or round tile.")
 
-    def brick_sizer(self):
+    def brick_sizer(self, img_tranform):
         img_size = self.img.size
         if img_size[0] >= img_size[1]:
-            brick_img_s = int(img_size[0]/self.brick_size)
-            brick_nr_w = self.brick_size
-            brick_nr_h = int(img_size[1] / brick_img_s)
+            brick_img_s = int(img_size[0]/img_tranform.size[0])
+            brick_nr_w = img_tranform.size[0]
+            brick_nr_h = img_tranform.size[1]
         else:
-            brick_img_s = int(img_size[1]/self.brick_size)
-            brick_nr_w = int(img_size[0] / brick_img_s)
-            brick_nr_h = self.brick_size
+            brick_img_s = int(img_size[1]/img_tranform.size[1])
+            brick_nr_w = img_tranform.size[0]
+            brick_nr_h = img_tranform.size[1]
 
         return brick_img_s, brick_nr_w, brick_nr_h
 
@@ -123,7 +123,7 @@ class Legolize:
         # img_tranform = self.quantize_color_matching(img_tranform, color_palette, color_nr)
         self.brick_nr = self.count_bricks(img_tranform)
 
-        brick_img_s, brick_nr_w, brick_nr_h = self.brick_sizer()
+        brick_img_s, brick_nr_w, brick_nr_h = self.brick_sizer(img_tranform)
         self.brick_img = self.brick_img.resize((brick_img_s, brick_img_s), resample=Image.LINEAR)
 
         self.lego_image = Image.new('RGB', (brick_img_s * brick_nr_w, brick_img_s * brick_nr_h), "white")
