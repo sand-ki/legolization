@@ -4,66 +4,75 @@ from main import Legolize
 from util import memory_img_to_io, file_img_to_io, int_validation, blank_image
 from config import color_dict
 
+
 sg.change_look_and_feel('LightGrey1')
-def TextLabel(text): return sg.Text(text+':', justification='r', size=(25,1))
+def text_label(text_var): return sg.Text(text_var + ':', justification='r', size=(25, 1))
+
 
 # Image part of the layout
 image_layout = [
     [sg.Text("Legolized image")],
-    [sg.Image(data = blank_image(), key="-image-")],
+    [sg.Image(data=blank_image(), key="-image-")],
 ]
 
 # Setting part of the layout
 settings_layout = [
     [sg.Text("Settings")],
-    [TextLabel("Select an image"), sg.Input(key = "-filepath-"), sg.FileBrowse(file_types=(("*.png", "*.jpg"),))],
-    [TextLabel("Nr of bricks along the longer side"), sg.Input(32, key ="-bricks-")],
-    [TextLabel("Select lego brick type"),
+    [text_label("Select an image"), sg.Input(key="-filepath-"), sg.FileBrowse(file_types=(("*.png", "*.jpg"),))],
+    [text_label("Nr of bricks along the longer side"), sg.Input(32, key="-bricks-")],
+    [text_label("Select lego brick type"),
      sg.Radio('Plate', "R1", key="-R1-", default=True), sg.Radio('Round', "R1", key="-R2-"),
      sg.Radio('Tile', "R1", key="-R3-"), sg.Radio('Round tile', "R1", key="-R4-")],
-    [TextLabel("Select base plate color (Applicable only for studs)"),
+    [text_label("Select base plate color (Applicable only for studs)"),
      sg.Radio('Grey', "R2", key="-B1-", default=True), sg.Radio('White', "R2", key="-B2-"),
      sg.Radio('Black', "R2", key="-B3-"), sg.Radio('Green', "R2", key="-B4-")],
-    [TextLabel("Name of the legolized image"), sg.Input(key="-name-")],
-    [TextLabel("Select a folder to save the image"), sg.Input(key="-savepath-"), sg.FolderBrowse(), sg.Button("Save image")],
-    [TextLabel(""), sg.Button("Legolize"), sg.Button("Show bricks"), sg.Exit()],
-    [sg.Text(key='-status-', justification='r', size=(25,1))],
+    [text_label("Name of the legolized image"), sg.Input(key="-name-")],
+    [text_label("Select a folder to save the image"), sg.Input(key="-savepath-"),
+     sg.FolderBrowse(), sg.Button("Save image")],
+    [text_label(""), sg.Button("Legolize"), sg.Button("Show bricks"), sg.Exit()],
+    [sg.Text(key='-status-', justification='r', size=(25, 1))],
 ]
 
 # Checkbox to select all or none of the color types
 color_all_layout = [
     [sg.Checkbox("Solid colors", key="-gCBsolid-", default=True, enable_events=True),
      sg.Checkbox("Transparent colors", key="-gCBtrans-", default=True, enable_events=True),
-     sg.Checkbox("Special colors", key="-gCBspec-", default=True, enable_events=True),]
+     sg.Checkbox("Special colors", key="-gCBspec-", default=True, enable_events=True)]
 ]
 
 # Color layouts
 color_layout1 = [
-    [sg.Image(data=file_img_to_io(os.path.join('assets', f"{type}__{color.replace(' ', '_')}.png"), (15, 15))),
-     sg.Checkbox(color, key=f"-sCBsolid_{id}-", default=True)]
-    for id, type, color in zip(color_dict['lego_color'].keys(), color_dict['type'].values(), color_dict['lego_color'].values())
-    if type == "Solid"
+    [sg.Image(data=file_img_to_io(os.path.join('assets', f"{btype}__{color.replace(' ', '_')}.png"), (15, 15))),
+     sg.Checkbox(color, key=f"-sCBsolid_{cid}-", default=True)]
+    for cid, btype, color in zip(color_dict['lego_color'].keys(),
+                                 color_dict['type'].values(),
+                                 color_dict['lego_color'].values())
+    if btype == "Solid"
 ]
 
 color_layout2 = [
-    [sg.Image(data=file_img_to_io(os.path.join('assets', f"{type}__{color.replace(' ', '_')}.png"), (15, 15))),
-     sg.Checkbox(color, key=f"-sCBtrans_{id}-", default=True)]
-    for id, type, color in zip(color_dict['lego_color'].keys(), color_dict['type'].values(), color_dict['lego_color'].values())
-    if type == "Transparent"
+    [sg.Image(data=file_img_to_io(os.path.join('assets', f"{btype}__{color.replace(' ', '_')}.png"), (15, 15))),
+     sg.Checkbox(color, key=f"-sCBtrans_{cid}-", default=True)]
+    for cid, btype, color in zip(color_dict['lego_color'].keys(),
+                                 color_dict['type'].values(),
+                                 color_dict['lego_color'].values())
+    if btype == "Transparent"
 ]
 
 color_layout3 = [
     [sg.Image(data=file_img_to_io(os.path.join('assets', f"Special__{color.replace(' ', '_')}.png"), (15, 15))),
-     sg.Checkbox(color, key=f"-sCBspec_{id}-", default=True)]
-    for id, type, color in zip(color_dict['lego_color'].keys(), color_dict['type'].values(), color_dict['lego_color'].values())
-    if type != "Solid" and type != "Transparent"
+     sg.Checkbox(color, key=f"-sCBspec_{cid}-", default=True)]
+    for cid, btype, color in zip(color_dict['lego_color'].keys(),
+                                 color_dict['type'].values(),
+                                 color_dict['lego_color'].values())
+    if btype != "Solid" and btype != "Transparent"
 ]
 
 # Merging color layouts to a tab group
 tab_layout = [
     [sg.TabGroup([[sg.Tab('Solid colors', color_layout1),
                    sg.Tab('Transparent colors', color_layout2),
-                   sg.Tab('Special colors', color_layout3),]]
+                   sg.Tab('Special colors', color_layout3)]]
                  )
      ]
 ]
@@ -73,7 +82,7 @@ layout = [
     [
         sg.Column(color_all_layout + tab_layout, key="-COL1-"),
         sg.VSeperator(),
-        sg.Column(image_layout + settings_layout, key = "-COL2-"),
+        sg.Column(image_layout + settings_layout, key="-COL2-"),
     ]
 ]
 
@@ -87,7 +96,6 @@ while True:
     print(event)
     if event == sg.WIN_CLOSED or event == 'Exit':
         break
-        window.close()
 
     # High-level checkbox changes the status of the individual color checkboxes
     elif event == "-gCBsolid-":
@@ -110,8 +118,8 @@ while True:
         try:
             key_color = [k for k in value.keys() if str(k).startswith('-sCB')]
             color_id = [k.split("_")[1].split('-')[0] for k in key_color if value[k]]
-            used_color_list = [rgb for id, rgb in zip(color_dict['rgb'].keys(), color_dict['rgb'].values())
-                               if str(id) in color_id]
+            used_color_list = [rgb for cid, rgb in zip(color_dict['rgb'].keys(), color_dict['rgb'].values())
+                               if str(cid) in color_id]
             used_color_dict = {'rgb': used_color_list}
 
             if int_validation(value["-bricks-"]):
@@ -123,7 +131,7 @@ while True:
                     brick_type = "round"
                 elif value["-R3-"]:
                     brick_type = "tile"
-                elif value["-R4-"]:
+                else:
                     brick_type = "round tile"
 
                 # Base plate color
@@ -136,15 +144,15 @@ while True:
                 elif value["-B3-"]:
                     # Black base plate
                     base_plate_color = (27, 42, 52)
-                elif value["-B4-"]:
+                else:
                     # Green base plate
                     base_plate_color = (88, 171, 65)
 
                 if value["-filepath-"] is not None:
                     lg = Legolize(value["-filepath-"], brick_type, brick_size)
+                    lg.create_image(used_color_dict, base_plate_color)
                 else:
                     sg.popup('Select an image before legolizing!')
-                lg.create_image(used_color_dict, base_plate_color)
             else:
                 sg.popup('Number of bricks should be integer, pls change it')
 
@@ -171,4 +179,3 @@ while True:
         window['-status-'].update("Image saved!")
 
 window.close()
-

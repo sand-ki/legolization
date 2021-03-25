@@ -1,6 +1,7 @@
 from PIL import Image
 from config import color_dict
 
+
 class Legolize:
     def __init__(self, path, brick_type, brick_size):
         self.img_path = path
@@ -25,36 +26,38 @@ class Legolize:
 
     def brick_sizer(self):
         img_size = self.img.size
-        imag_ratio = img_size[0] / img_size[1]
         if img_size[0] >= img_size[1]:
             brick_img_s = int(img_size[0]/self.brick_size)
             brick_nr_w = self.brick_size
             brick_nr_h = int(img_size[1] / brick_img_s)
-        elif img_size[0] < img_size[1]:
+        else:
             brick_img_s = int(img_size[1]/self.brick_size)
             brick_nr_w = int(img_size[0] / brick_img_s)
             brick_nr_h = self.brick_size
 
         return brick_img_s, brick_nr_w, brick_nr_h
 
-    def create_color_palette(self, color_dict):
+    @staticmethod
+    def create_color_palette(color_dictionary):
         color_list = []
-        for c in color_dict['rgb']:
+        for c in color_dictionary['rgb']:
             color_list.append(c[0])
             color_list.append(c[1])
             color_list.append(c[2])
 
-        color_nr = len(color_dict['rgb'])
+        color_nr = len(color_dictionary['rgb'])
 
         return color_list, color_nr
 
-    def quantize_color_matching(self, image, palette, color_nr):
+    @staticmethod
+    def quantize_color_matching(image, palette, color_nr):
         pal_img = Image.new("P", (1, 1))
         pal_img.putpalette(palette)
 
         return image.quantize(palette=pal_img, colors=color_nr).convert("RGB")
 
-    def convert_color_matching(self, image, palette):
+    @staticmethod
+    def convert_color_matching(image, palette):
         color_to_complete = 256 - len(palette)//3
         color1 = palette[:3]
         full_palette = palette + color1 * color_to_complete
@@ -63,8 +66,9 @@ class Legolize:
 
         return image.im.convert("P", 10, pal_img.im).convert("RGB")
 
-    def base_plate_masking(self, value, actual_color, target_color, target_base_color):
-        if value  == 0:
+    @staticmethod
+    def base_plate_masking(value, actual_color, target_color, target_base_color):
+        if value == 0:
             return target_base_color
         else:
             return actual_color - target_color + value
@@ -77,19 +81,19 @@ class Legolize:
         if self.brick_type == "plate":
             r_offset = bands[0].point(lambda x: _r-115+x)
             g_offset = bands[1].point(lambda x: _g-115+x)
-            b_offset= bands[2].point(lambda x: _b-115+x)
+            b_offset = bands[2].point(lambda x: _b-115+x)
         elif self.brick_type == "round":
             r_offset = bands[0].point(lambda x: self.base_plate_masking(x, _r, 110, _r_base))
             g_offset = bands[1].point(lambda x: self.base_plate_masking(x, _g, 110, _g_base))
-            b_offset= bands[2].point(lambda x: self.base_plate_masking(x, _b, 110, _b_base))
+            b_offset = bands[2].point(lambda x: self.base_plate_masking(x, _b, 110, _b_base))
         elif self.brick_type == "tile":
             r_offset = bands[0].point(lambda x: _r-105+x)
             g_offset = bands[1].point(lambda x: _g-105+x)
-            b_offset= bands[2].point(lambda x: _b-105+x)
+            b_offset = bands[2].point(lambda x: _b-105+x)
         elif self.brick_type == "round tile":
             r_offset = bands[0].point(lambda x: self.base_plate_masking(x, _r, 110, _r_base))
             g_offset = bands[1].point(lambda x: self.base_plate_masking(x, _g, 110, _g_base))
-            b_offset= bands[2].point(lambda x: self.base_plate_masking(x, _b, 110, _b_base))
+            b_offset = bands[2].point(lambda x: self.base_plate_masking(x, _b, 110, _b_base))
         else:
             raise AttributeError("Non-valid brick type. You can choose plate, round, tile or round tile.")
 
@@ -99,21 +103,22 @@ class Legolize:
 
         return Image.merge(image.mode, bands)
 
-    def count_bricks(self, img_small):
+    @staticmethod
+    def count_bricks(img_small):
         brick_rgb = [img_small.getpixel((w, h)) for w in range(img_small.size[0]) for h in range(img_small.size[1])]
-        brick_hex = ['#{:02x}{:02x}{:02x}'.format(r, g, b) for r,g,b in brick_rgb]
-        brick_id = [k for hex in brick_hex for k, v in color_dict['hex'].items() if hex == v]
-        brick_name = [v for id in brick_id for k, v in color_dict['lego_color'].items() if id == k]
-        color_count = {element : brick_name.count(element) for element in brick_name}
+        brick_hex = ['#{:02x}{:02x}{:02x}'.format(r, g, b) for r, g, b in brick_rgb]
+        brick_id = [k for hexx in brick_hex for k, v in color_dict['hex'].items() if hexx == v]
+        brick_name = [v for bid in brick_id for k, v in color_dict['lego_color'].items() if bid == k]
+        color_count = {element: brick_name.count(element) for element in brick_name}
 
         return color_count
 
-    def create_image(self, color_dict, base_plate_color):
+    def create_image(self, color_dictionary, base_plate_color):
         self.brick_style()
         max_brick_size = (self.brick_size, self.brick_size)
         img_tranform = self.img.copy()
         img_tranform.thumbnail(max_brick_size, resample=Image.NEAREST)
-        color_palette, color_nr = self.create_color_palette(color_dict)
+        color_palette, color_nr = self.create_color_palette(color_dictionary)
         img_tranform = self.convert_color_matching(img_tranform, color_palette)
         # img_tranform = self.quantize_color_matching(img_tranform, color_palette, color_nr)
         self.brick_nr = self.count_bricks(img_tranform)
@@ -130,14 +135,3 @@ class Legolize:
 
     def save_image(self, filename):
         self.lego_image.save(filename)
-
-
-
-
-
-
-
-
-
-
-
