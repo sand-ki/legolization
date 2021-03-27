@@ -93,7 +93,6 @@ solid, trans, spec = True, True, True
 while True:
     event, value = window.read()
 
-    print(event)
     if event == sg.WIN_CLOSED or event == 'Exit':
         break
 
