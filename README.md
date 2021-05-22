@@ -35,7 +35,7 @@ or you can run from your IDE through the same entry point, app.py.
   <img src="/assets/sample_pic_readme.jpg" width=350 height=525>
   <img src="/assets/sample_pic_readme_legolized.png" width=350 height=525>
 </p>
-Credit: Photo by Saifuddin Ratlamwala from Pexels
+Photo by Saifuddin Ratlamwala from Pexels
 
 ### Select colors
 * You can select colors on the right hand side that are used for creating your lego-like image.
