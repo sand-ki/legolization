@@ -1,7 +1,8 @@
 #Legolization
-The project is making your picture as if it was constructed from lego. On a small UI you can choose between different settings. 
+The project is making your picture as if it was constructed from lego using lego colors only. 
+On a small UI you can choose between different settings. 
 It is a local application, hence your pictures are not uploaded and shared with anybody.
-The program is entirely based on pillow package that can be direcly installed without any configuration.
+The program is entirely based on pillow package that can be directly installed without any configuration.
 Credit for lego color codes is listed in the config.py. Those are collected by Ryan Howerter and can be reached here:
 https://swooshable.com/parts/colors
 
@@ -28,6 +29,10 @@ python app.py
 or you can run from your IDE through the same entry point, app.py.
 
 ## Features
+### Before after sample: Photo by Saifuddin Ratlamwala from Pexels
+ ![sample-before](https://github.com/sand-ki/legolization/blob/master/assets/sample_pic_readme.jpg)
+ ![sample-after](https://github.com/sand-ki/legolization/blob/master/assets/sample_pic_readme_legolized.png)
+
 ### Select colors
 * You can select colors on the right hand side that are used for creating your lego-like image.
 * The colors are grouped into 3 categories with the checkboxes you can manage the different groups. 

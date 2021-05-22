@@ -23,7 +23,7 @@ settings_layout = [
     [text_label("Select lego brick type"),
      sg.Radio('Plate', "R1", key="-R1-", default=True), sg.Radio('Round', "R1", key="-R2-"),
      sg.Radio('Tile', "R1", key="-R3-"), sg.Radio('Round tile', "R1", key="-R4-")],
-    [text_label("Select base plate color (Applicable only for studs)"),
+    [text_label("Select base plate color"),
      sg.Radio('Grey', "R2", key="-B1-", default=True), sg.Radio('White', "R2", key="-B2-"),
      sg.Radio('Black', "R2", key="-B3-"), sg.Radio('Green', "R2", key="-B4-")],
     [text_label("Name of the legolized image"), sg.Input(key="-name-")],
