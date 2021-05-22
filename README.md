@@ -29,7 +29,8 @@ python app.py
 or you can run from your IDE through the same entry point, app.py.
 
 ## Features
-Before&after sample (64 bricks along the longer side)
+###Before&after sample 
+64 bricks along the longer side of the iamge
 <p align="center">
   <img src="/assets/sample_pic_readme.jpg" width=350 height=525>
   <img src="/assets/sample_pic_readme_legolized.png" width=350 height=525>
