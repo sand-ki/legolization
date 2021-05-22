@@ -31,8 +31,8 @@ or you can run from your IDE through the same entry point, app.py.
 ## Features
 ### Before&after sample with 64 bricks along the longer side 
 <p align="center">
-  <img src="/assets/sample_pic_readme.jpg" width="350">
-  <img src="/assets/sample_pic_readme_legolized.png" width="350">
+  <img src="/assets/sample_pic_readme.jpg" width=350>
+  <img src="/assets/sample_pic_readme_legolized.png" width=350>
 </p>
 Credit: Photo by Saifuddin Ratlamwala from Pexels
 
