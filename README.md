@@ -1,4 +1,4 @@
-#Legolization
+# Legolization
 The project is making your picture as if it was constructed from lego using lego colors only. 
 On a small UI you can choose between different settings. 
 It is a local application, hence your pictures are not uploaded and shared with anybody.
