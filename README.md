@@ -29,9 +29,12 @@ python app.py
 or you can run from your IDE through the same entry point, app.py.
 
 ## Features
-### Before after sample: Photo by Saifuddin Ratlamwala from Pexels
- ![sample-before](https://github.com/sand-ki/legolization/blob/master/assets/sample_pic_readme.jpg)
- ![sample-after](https://github.com/sand-ki/legolization/blob/master/assets/sample_pic_readme_legolized.png)
+### Before after sample 
+Photo by Saifuddin Ratlamwala from Pexels
+<p align="center">
+  <img src="/assets/sample_pic_readme.jpg" width="350" title="sample before">
+  <img src="/assets/sample_pic_readme_legolized.png" width="350" title="sample after">
+</p>
 
 ### Select colors
 * You can select colors on the right hand side that are used for creating your lego-like image.
