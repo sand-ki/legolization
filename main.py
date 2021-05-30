@@ -13,6 +13,11 @@ class Legolize:
         self.brick_nr = None
 
     def brick_style(self):
+        """ Method for reading the chosen lego image to memory
+
+        Returns:
+            No return
+        """
         if self.brick_type == "plate":
             self.brick_img = Image.open("assets/lego_plate.png")
         elif self.brick_type == "round":
@@ -25,6 +30,16 @@ class Legolize:
             raise AttributeError("Non-valid brick type. You can choose plate, round, tile or round tile.")
 
     def brick_sizer(self, img_tranform):
+        """ Resizing the image to match the squared lego brick image
+
+        Args:
+            img_tranform: input image
+
+        Returns:
+            brick_img_s: size of the lego bricks
+            brick_nr_w: number of lego bricks width-wise
+            brick_nr_h: number of lego bricks height-wise
+        """
         img_size = self.img.size
         if img_size[0] >= img_size[1]:
             brick_img_s = int(img_size[0]/img_tranform.size[0])
@@ -39,6 +54,15 @@ class Legolize:
 
     @staticmethod
     def create_color_palette(color_dictionary):
+        """ Create color palette, a list, from the colors selected by the user
+
+        Args:
+            color_dictionary: dict with colors selected on the GUI
+
+        Returns:
+            color_list: list of colors
+            color_nr: number of colors
+        """
         color_list = []
         for c in color_dictionary['rgb']:
             color_list.append(c[0])
@@ -51,6 +75,16 @@ class Legolize:
 
     @staticmethod
     def quantize_color_matching(image, palette, color_nr):
+        """ Recoloring image with custom colors using the PIL quantize function
+
+        Args:
+            image: thumbnailed input image
+            palette: palette with custom colors to be used in the new image
+            color_nr: number of colors used
+
+        Returns:
+            The recolored image
+        """
         pal_img = Image.new("P", (1, 1))
         pal_img.putpalette(palette)
 
@@ -58,6 +92,15 @@ class Legolize:
 
     @staticmethod
     def convert_color_matching(image, palette):
+        """ Recoloring image with custom colors using the PIL convert function
+
+        Args:
+            image: thumbnailed input image
+            palette: palette with custom colors to be used in the new image
+
+        Returns:
+            The recolored image
+        """
         color_to_complete = 256 - len(palette)//3
         color1 = palette[:3]
         full_palette = palette + color1 * color_to_complete
@@ -67,13 +110,42 @@ class Legolize:
         return image.im.convert("P", 10, pal_img.im).convert("RGB")
 
     @staticmethod
-    def base_plate_masking(value, actual_color, target_color, target_base_color):
+    def base_plate_masking(value, target_color, actual_color, target_base_color):
+        """ Thresholding colors for background color change applicable for round type lego bricks only
+
+        Used in the PIL point function where color channels are shifted. If the color in the channel is 0,
+        it is the base plate, so it is replaced by the base plate target color, otherwise it is the round type
+        brick and changes the colors in each channels by shifting them compared to the target.
+
+        Args:
+            value: value in the channel coming from iterating lambda function
+            actual_color: actual color of the lego brick in that channel
+            target_color: target color of the lego brick in that channel
+            target_base_color: target color for the base plate in the certain channel
+
+        Returns:
+            Returns either the base plate or the shifted color of the brick for the channel
+        """
         if value == 0:
             return target_base_color
         else:
-            return actual_color - target_color + value
+            return target_color - actual_color + value
 
     def colorize_brick(self, image, target_color, base_plate_color):
+        """ Recoloring image by using the PIL point function for each of the channels
+
+        With the point function the actual color of the brick/base plate is shifted compared to the target color
+        in each channel. Finally the new, recolor image is reconstructed from the 3 modified channels.
+        For further details pls check out the Pillow.point  documentation
+
+        Args:
+            image: thumbnailed input image
+            target_color: color of the brick to be used
+            base_plate_color: color of the base plate to be used
+
+        Returns:
+            The recolor image
+        """
         bands = image.split()
         _r, _g, _b = target_color
         _r_base, _g_base, _b_base = base_plate_color
@@ -105,6 +177,14 @@ class Legolize:
 
     @staticmethod
     def count_bricks(img_small):
+        """ This method counts bricks for each color that is used.
+
+        Args:
+            img_small: thumbnailed input image
+
+        Returns:
+            Number of bricks for each color used in a dict object
+        """
         brick_rgb = [img_small.getpixel((w, h)) for w in range(img_small.size[0]) for h in range(img_small.size[1])]
         brick_hex = ['#{:02x}{:02x}{:02x}'.format(r, g, b) for r, g, b in brick_rgb]
         brick_id = [k for hexx in brick_hex for k, v in color_dict['hex'].items() if hexx == v]
@@ -114,6 +194,15 @@ class Legolize:
         return color_count
 
     def create_image(self, color_dictionary, base_plate_color):
+        """ Main function creating legolized iamge
+
+        Args:
+            color_dictionary: dict with colors chosen by the user
+            base_plate_color: color of the base plate chosen by the user
+
+        Returns:
+            No return value
+        """
         self.brick_style()
         max_brick_size = (self.brick_size, self.brick_size)
         img_tranform = self.img.copy()
@@ -134,4 +223,12 @@ class Legolize:
                 self.lego_image.paste(img_brick_single, (w * brick_img_s, h * brick_img_s))
 
     def save_image(self, filename):
+        """ Save image to a given location
+
+        Args:
+            filename: location where the final iamge is saved
+
+        Returns:
+            No returns
+        """
         self.lego_image.save(filename)
