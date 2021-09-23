@@ -15,7 +15,7 @@ The requirements.txt contains all the neccessary packages, please make sure you 
 ```
 pip install -r requirements.txt
 ```
-Only for modules are used namly:
+Only for modules are used namely:
 * pillow
 * pysimplegui
 * numpy
