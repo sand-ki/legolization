@@ -1,4 +1,4 @@
-numpy==1.19.3
+numpy==1.21
 matplotlib==3.3.3
 Pillow==9.0.0
 PySimpleGUI==4.38.0
